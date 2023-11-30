@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Qianfan</title>
+  </head>
+  <body>
+    <input id="prompt" value="你是谁？" />
+    <button id="submit">提交</button>
+    <div id="answer"></div>
+
+    <script src="../dist/qianfan.js"></script>
+    <script>
+      // 使用前关闭Chrome跨域 参考：https://www.cnblogs.com/watervon/p/17368927.html
+      const promptInput = document.getElementById('prompt');
+      const submitBtn = document.getElementById('submit');
+      const answerDiv = document.getElementById('answer');
+
+      submitBtn.addEventListener('click', async function () {
+        answerDiv.innerText = '';
+        const { Models, QianfanClient, ChatMessage } = qianfan;
+        const APIKey = '';
+        const SecretKey = '';
+
+        const model = Models.ChatGLM2_6B_32K;
+        const messages = [ChatMessage.fromUser(promptInput.value)];
+
+        var client = new QianfanClient(APIKey, SecretKey);
+        await client.chatAsync(
+          model,
+          messages,
+          (value) => {
+            answerDiv.innerText += value.result;
+            console.log(value);
+          },
+          {},
+          'gy'
+        );
+      });
+    </script>
+  </body>
+</html>
